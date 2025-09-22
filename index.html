@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Nepal Form</title>
+</head>
+<body>
+  <form id="nepalForm">
+    <label>Name:</label><input type="text" name="name" required><br>
+    <label>Email:</label><input type="email" name="email" required><br>
+    <label>Phone:</label><input type="tel" name="phone" required><br>
+
+    <label>Province:</label>
+    <select name="province" id="province" required>
+      <option value="">Select Province</option>
+      <option value="Koshi">Koshi</option>
+      <option value="Madhesh">Madhesh</option>
+      <option value="Bagmati">Bagmati</option>
+      <option value="Gandaki">Gandaki</option>
+      <option value="Lumbini">Lumbini</option>
+      <option value="Karnali">Karnali</option>
+      <option value="Sudurpashchim">Sudurpashchim</option>
+    </select><br>
+
+    <label>Local Government:</label>
+    <select name="localGovernment" id="localGovernment" required>
+      <option value="">Select Local Government</option>
+    </select><br>
+
+    <label>Ward:</label>
+    <select name="ward" id="ward" required>
+      <option value="">Select Ward</option>
+    </select><br>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    const webAppUrl = "YOUR_WEB_APP_URL_HERE";
+
+    const provinceLG = {
+      "Koshi": ["Biratnagar", "Dharan", "Inaruwa"],
+      "Bagmati": ["Kathmandu", "Lalitpur", "Bhaktapur"],
+      "Gandaki": ["Pokhara", "Gorkha", "Lamjung"],
+      "Madhesh": ["Janakpur", "Bardibas", "Rajbiraj"],
+      "Lumbini": ["Butwal", "Tansen", "Bhairahawa"],
+      "Karnali": ["Birendranagar", "Chaurjahari", "Rukumkot"],
+      "Sudurpashchim": ["Dhangadhi", "Mahendranagar", "Tikapur"]
+    };
+
+    const localWards = {
+      "Biratnagar": ["Ward 1", "Ward 2", "Ward 3"],
+      "Dharan": ["Ward 1", "Ward 2"],
+      "Inaruwa": ["Ward 1", "Ward 2", "Ward 3", "Ward 4"],
+      "Kathmandu": ["Ward 1", "Ward 2", "Ward 3"],
+      "Lalitpur": ["Ward 1", "Ward 2", "Ward 3", "Ward 4"],
+      "Bhaktapur": ["Ward 1", "Ward 2"],
+      "Pokhara": ["Ward 1", "Ward 2", "Ward 3", "Ward 4"],
+      "Gorkha": ["Ward 1", "Ward 2", "Ward 3"],
+      "Lamjung": ["Ward 1", "Ward 2"],
+      "Janakpur": ["Ward 1", "Ward 2", "Ward 3"],
+      "Bardibas": ["Ward 1", "Ward 2"],
+      "Rajbiraj": ["Ward 1", "Ward 2", "Ward 3"],
+      "Butwal": ["Ward 1", "Ward 2", "Ward 3"],
+      "Tansen": ["Ward 1", "Ward 2"],
+      "Bhairahawa": ["Ward 1", "Ward 2", "Ward 3"],
+      "Birendranagar": ["Ward 1", "Ward 2", "Ward 3"],
+      "Chaurjahari": ["Ward 1", "Ward 2"],
+      "Rukumkot": ["Ward 1", "Ward 2", "Ward 3"],
+      "Dhangadhi": ["Ward 1", "Ward 2"],
+      "Mahendranagar": ["Ward 1", "Ward 2", "Ward 3"],
+      "Tikapur": ["Ward 1", "Ward 2"]
+    };
+
+    const provinceSelect = document.getElementById("province");
+    const localSelect = document.getElementById("localGovernment");
+    const wardSelect = document.getElementById("ward");
+
+    provinceSelect.addEventListener("change", () => {
+      localSelect.innerHTML = '<option value="">Select Local Government</option>';
+      wardSelect.innerHTML = '<option value="">Select Ward</option>';
+      const lgs = provinceLG[provinceSelect.value] || [];
+      lgs.forEach(lg => {
+        localSelect.innerHTML += `<option value="${lg}">${lg}</option>`;
+      });
+    });
+
+    localSelect.addEventListener("change", () => {
+      wardSelect.innerHTML = '<option value="">Select Ward</option>';
+      const wards = localWards[localSelect.value] || [];
+      wards.forEach(w => {
+        wardSelect.innerHTML += `<option value="${w}">${w}</option>`;
+      });
+    });
+
+    document.getElementById("nepalForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const data = {
+        name: e.target.name.value,
+        email: e.target.email.value,
+        phone: e.target.phone.value,
+        province: e.target.province.value,
+        localGovernment: e.target.localGovernment.value,
+        ward: e.target.ward.value
+      };
+      fetch(webAppUrl, {
+        method: "POST",
+        body: JSON.stringify(data)
+      }).then(res => res.json())
+        .then(response => alert("Submitted successfully!"))
+        .catch(err => alert("Error!"));
+    });
+  </script>
+</body>
+</html>
